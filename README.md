@@ -6,7 +6,7 @@ The Processing drawing API for OpenFL-HaxePunk - Vector shapes editing was never
 This is a beta version - but it works, I already use it :)
 ----------------------------------------
 
-[Processing][1] has great simple tools to draw simple or complex vector shapes.
+[Processing][1] (aka P5) has great simple tools to draw simple or complex vector shapes.
 
 Doing the same with HaxePunk or OpenFL is really painfull, so here is the best of both !
 
@@ -30,7 +30,6 @@ It's all static methods, so you can do fast things like this :
 
 or build a complex polygon like this :
 
-    P5.beginShape();
     P5.beginShape();
     P5.vertex(20, 20);
     P5.vertex(40, 20);
