@@ -19,13 +19,11 @@ import com.haxepunk.Graphic;
 import flash.display.BitmapData;
 import flash.geom.Matrix;
 
-//import com.haxepunk.graphics.Image;
-import ghxp.GImage; // a shortcut to create HaxePunk images easily... 
-// this Lib could be modified to work with native Image class easily (TODO)
+import com.haxepunk.graphics.Image;
 
 typedef Vertex = { x:Float, y:Float };
 
-class GP5 extends Graphic {
+class P5 extends Graphic {
 
 	public function new(){ super(); } // is it really usefull ?
 
@@ -40,12 +38,13 @@ class GP5 extends Graphic {
 		HXP.sprite.graphics.clear();
 		complexMode_ = true;
 	}
-	public static function getComplex(w_:Int=0, h_:Int=0, rot:Float=0):GImage {
+	public static function getComplex(w_:Int=0, h_:Int=0, center_:Bool = true):Image {
 		complexMode_ = false;
 		if(w_==0) w_ = Std.int(HXP.sprite.width);
 		if(h_==0) h_ = Std.int(HXP.sprite.height);
-		var img = createGImage(w_, h_, rot);
-		HXP.sprite.graphics.clear(); // on remet à zéro
+		var img = createImage(w_, h_);
+		HXP.sprite.graphics.clear();
+		if(center_) img.centerOrigin(); // image is centered by default
 		return img;
 	}
 
@@ -73,7 +72,7 @@ class GP5 extends Graphic {
 	}
 
 	public static var sommets:Array<Float>; // to store Polygon points, and re-use it later (to cuild a Collision Mask for exemple)
-	public static function randomPolygon(L_:Int, H_:Int=0, nbSommets_:Int=0):GImage {
+	public static function randomPolygon(L_:Int, H_:Int=0, nbSommets_:Int=0):Image {
 		// random convex polygon !
 		// http://stackoverflow.com/questions/21690008/how-to-generate-random-vertices-to-form-a-convex-polygon-in-c
 		
@@ -101,14 +100,14 @@ class GP5 extends Graphic {
 		}
 
 		// dessin
-		GP5.beginShape();
-		for (i in 0...nbSommets_) { GP5.vertex(sommets[2*i], sommets[2*i+1]); }		
-		return GP5.endShape();
+		P5.beginShape();
+		for (i in 0...nbSommets_) { P5.vertex(sommets[2*i], sommets[2*i+1]); }		
+		return P5.endShape();
 	}
 
 
 	/*
-	Procesing style settings
+	Processing style settings
 	*/
 
 	private static var strokeColor:Int = 0x000000;
@@ -144,14 +143,14 @@ class GP5 extends Graphic {
 		if(mode == "center" || mode == "CENTER"){ rectMode_ = "center";
 		} else { rectMode_ = "corner"; }
 	}
-	public static function background(color_:Int, alpha_:Float=1):GImage{
+	public static function background(color_:Int, alpha_:Float=1):Image{
 		var pstrokeThickness = strokeThickness; // backup previous settings
 		var pfillAlpha = fillAlpha;
 		var pfillColor = fillColor;
 
 		noStroke();
 		fill(color_, alpha_);		
-		var image:GImage = rect(0, 0, HXP.width, HXP.height);
+		var image:Image = rect(0, 0, HXP.width, HXP.height);
 
 		// back to original settings
 		if(pfillAlpha>0) fill(pfillColor, pfillAlpha);
@@ -165,38 +164,53 @@ class GP5 extends Graphic {
 
 	// 2D primitives
 	// unless you triggered the "complex mode", each shape will generate an Image
-	public static function ellipse(x_:Float=0, y_:Float=0, width:Float=0, height:Float=0):GImage {
+	public static function ellipse(x_:Float=0, y_:Float=0, width:Float=0, height:Float=0):Image {
 		if (width == 0) throw "Illegal ellipse, sizes cannot be 0.";
 		if (height == 0) height = width;
 
+		var rectX:Float = 0;
+		var rectY:Float = 0;
+		if(complexMode_){
+			rectX = x_; rectY = y_;
+			if(ellipseMode_=="center"){ rectX = x_-width/2; rectY = y_-height/2; }
+		}
+
 		applyStyle();
-		HXP.sprite.graphics.drawEllipse(strokeThickness, strokeThickness, width, height);
+		HXP.sprite.graphics.drawEllipse(rectX+strokeThickness, rectY+strokeThickness, width, height);
 		endStyle();
 
-		var image:GImage = createGImage(width, height);
+		var image:Image = createImage(width, height);
 		image.x = x_; image.y = y_;
 		if(ellipseMode_=="center") image.centerOrigin();
 
 		return image;
 	}
-	public static function rect(x_:Float=0, y_:Float=0, width:Float=0, height:Float=0, radius_:Float=0):GImage {
+	public static function rect(x_:Float=0, y_:Float=0, width:Float=0, height:Float=0, radius_:Float=0):Image {
 		if (width == 0 || height == 0) throw "Illegal rect, sizes cannot be 0.";
+
+
+		var rectX:Float = 0;
+		var rectY:Float = 0;
+		if(complexMode_){
+			rectX = x_; rectY = y_;
+			if(rectMode_=="center"){ rectX = x_-width/2; rectY = y_-height/2; }
+		}
 
 		applyStyle();
 		if(radius_==0){
-			HXP.sprite.graphics.drawRect(strokeThickness, strokeThickness, width, height);
+			HXP.sprite.graphics.drawRect(rectX+strokeThickness, rectY+strokeThickness, width, height);
 		} else {
-			HXP.sprite.graphics.drawRoundRect(strokeThickness, strokeThickness, width, height, 2*radius_, 2*radius_);
+			HXP.sprite.graphics.drawRoundRect(rectX+strokeThickness, rectY+strokeThickness, width, height, 2*radius_, 2*radius_);
 		}		
 		endStyle();
 
-		var image:GImage = createGImage(width, height);
+		var image:Image = createImage(width, height);
 		image.x = x_; image.y = y_;
 		if(rectMode_=="center") image.centerOrigin();
 
 		return image;
 	}
-	public static function line(x1:Float, y1:Float, x2:Float, y2:Float):GImage {
+	public static function line(x1:Float, y1:Float, x2:Float, y2:Float):Image {
 
 		var x_:Float = Math.min(x1, x2);
 		var y_:Float = Math.min(y1, y2);
@@ -210,12 +224,12 @@ class GP5 extends Graphic {
 		HXP.sprite.graphics.lineTo(x2-x_+strokeThickness, y2-y_+strokeThickness);
 		endStyle();
 
-		var image:GImage = createGImage(Std.int(w_+2*strokeThickness), Std.int(h_+2*strokeThickness));
+		var image:Image = createImage(Std.int(w_+2*strokeThickness), Std.int(h_+2*strokeThickness));
 		image.x = x_-strokeThickness; 
 		image.y = y_-strokeThickness;
 		return image;
 	}
-	public static function quad(x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float, x4:Float, y4:Float):GImage {
+	public static function quad(x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float, x4:Float, y4:Float):Image {
 		beginShape();
 		vertex(x1, y1);
 		vertex(x2, y2);
@@ -223,16 +237,16 @@ class GP5 extends Graphic {
 		vertex(x4, y4);
 		return endShape();
 	}
-	public static function triangle(x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float):GImage {
+	public static function triangle(x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float):Image {
 		beginShape();
 		vertex(x1, y1);
 		vertex(x2, y2);
 		vertex(x3, y3);
 		return endShape();
 	}
-	public static function point(x_:Float=0, y_:Float=0):GImage {
+	public static function point(x_:Float=0, y_:Float=0):Image {
 		if(strokeThickness>1){
-			var rond:GImage = ellipse(x_, y_, Std.int(strokeThickness/4));
+			var rond:Image = ellipse(x_, y_, Std.int(strokeThickness/4));
 			rond.centerOrigin();
 			return rond;
 		} else {
@@ -249,7 +263,7 @@ class GP5 extends Graphic {
 		var v:Vertex = { x:x_, y:y_ };
 		vectArray.push(v);
 	}
-	public static function endShape(close:Bool=true):GImage {
+	public static function endShape(close:Bool=true):Image {
 		if(vectArray.length<=1) throw "Illegal shape, needs at least 2 vertex.";
 
 		// setting of the image that will contain all the vertexes
@@ -276,32 +290,39 @@ class GP5 extends Graphic {
 		var w_:Float = maxX - minX;
 		var h_:Float = maxY - minY;
 
+		var rectX:Float = 0;
+		var rectY:Float = 0;
+		if(complexMode_){
+			rectX = x_; rectY = y_;
+			if(rectMode_=="center"){ rectX = x_-(maxX-minX)/2; rectY = y_-(maxY-minY)/2; }
+		}
+
 		applyStyle();
 
 		sommets = new Array(); // sometimes it's usefull to re-use this, to create the associated colision Mask for exemple
 		if(rectMode_=="center"){
 			sommets.push(vectArray[0].x-minX+strokeThickness); sommets.push(vectArray[0].y-minY+strokeThickness);
-			HXP.sprite.graphics.moveTo(vectArray[0].x-minX+strokeThickness, vectArray[0].y-minY+strokeThickness); // move to 1st
+			HXP.sprite.graphics.moveTo(rectX+vectArray[0].x-minX+strokeThickness, rectY+vectArray[0].y-minY+strokeThickness); // move to 1st
 			for (i in 1...vectArray.length){
 				sommets.push(vectArray[i].x-minX+strokeThickness); sommets.push(vectArray[i].y-minY+strokeThickness);
-				HXP.sprite.graphics.lineTo(vectArray[i].x-minX+strokeThickness, vectArray[i].y-minY+strokeThickness);
+				HXP.sprite.graphics.lineTo(rectX+vectArray[i].x-minX+strokeThickness, rectY+vectArray[i].y-minY+strokeThickness);
 			}
-			if(close) HXP.sprite.graphics.lineTo(vectArray[0].x-minX+strokeThickness, vectArray[0].y-minY+strokeThickness); // line to 1st
+			if(close) HXP.sprite.graphics.lineTo(rectX+vectArray[0].x-minX+strokeThickness, rectY+vectArray[0].y-minY+strokeThickness); // line to 1st
 		} else {
 			sommets.push(vectArray[0].x-x_+strokeThickness); sommets.push(vectArray[0].y-y_+strokeThickness);
-			HXP.sprite.graphics.moveTo(vectArray[0].x-x_+strokeThickness, vectArray[0].y-y_+strokeThickness); // move to 1st
+			HXP.sprite.graphics.moveTo(rectX+vectArray[0].x-x_+strokeThickness, rectY+vectArray[0].y-y_+strokeThickness); // move to 1st
 			for (i in 1...vectArray.length){
 				sommets.push(vectArray[i].x-x_+strokeThickness); sommets.push(vectArray[i].y-y_+strokeThickness);
-				HXP.sprite.graphics.lineTo(vectArray[i].x-x_+strokeThickness, vectArray[i].y-y_+strokeThickness);
+				HXP.sprite.graphics.lineTo(rectX+vectArray[i].x-x_+strokeThickness, rectY+vectArray[i].y-y_+strokeThickness);
 			}
-			if(close) HXP.sprite.graphics.lineTo(vectArray[0].x-x_+strokeThickness, vectArray[0].y-y_+strokeThickness); // line to 1st
+			if(close) HXP.sprite.graphics.lineTo(rectX+vectArray[0].x-x_+strokeThickness, rectY+vectArray[0].y-y_+strokeThickness); // line to 1st
 		}
 		
 		endStyle();		
 		
-		var image:GImage = createGImage(Std.int(w_+2*strokeThickness), Std.int(h_+2*strokeThickness));
-		image.x = 0;
-		image.y = 0;
+		var image:Image = createImage(Std.int(w_+2*strokeThickness), Std.int(h_+2*strokeThickness));
+		image.x = x_;
+		image.y = y_;
 
 		if(rectMode_=="center") image.centerOrigin();
 
@@ -357,26 +378,21 @@ class GP5 extends Graphic {
 	private static function endStyle(){
 		if(fillAlpha>0) HXP.sprite.graphics.endFill();
 	}
-	private static function createGImage(w_:Float, h_:Float, rot:Float=0):GImage {
+	private static function createImage(w_:Float, h_:Float):Image {
 		// vector shape conversion to flash.display.BitmapData with the right size
 		var data:BitmapData = HXP.createBitmap(
 			Math.ceil(w_+2*strokeThickness), 
 			Math.ceil(h_+2*strokeThickness), true, 0);
 
 		var matrice:Matrix = new Matrix();
-		//matrice.scale(iTest.scaleX, iTest.scaleY);
-		/*matrice.translate(-(w_+2*strokeThickness)/2, -(h_+2*strokeThickness)/2);
-		matrice.rotate( rot );
-		matrice.translate(0,0);*/
-		//matrice.translate(0, 0);
 
 		data.draw(HXP.sprite, matrice);
-		// -> haxepunk.graphics.GImage
-		var image:GImage;
+		// -> haxepunk.graphics.Image
+		var image:Image;
 		if (HXP.renderMode == RenderMode.HARDWARE){
-			image = new GImage(Atlas.loadImageAsRegion(data));
+			image = new Image(Atlas.loadImageAsRegion(data));
 		} else {
-			image = new GImage(data);
+			image = new Image(data);
 		}
 		return image;
 	}

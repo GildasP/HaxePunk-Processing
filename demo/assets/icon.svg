@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Calque_3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="256px" height="256px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" xml:space="preserve">
+<g>
+	<rect x="32" y="32" fill="#F7941E" width="192" height="192"/>
+	<polygon fill="#FDB813" points="0,0 8,64 32,128 128,32 64,8 	"/>
+	<polygon fill="#FAA61A" points="0,256 64,248 128,224 32,128 8,192 	"/>
+	<polygon fill="#F36F21" points="256,256 248,192 224,128 128,224 192,248 	"/>
+	<polygon fill="#F58220" points="256,0 192,8 128,32 224,128 248,64 	"/>
+	<polygon fill="#FFCB08" points="0,0 128,32 64,0 	"/>
+	<polygon fill="#FFF200" points="0,0 0,64 32,128 	"/>
+	<polygon fill="#FFF200" points="0,256 32,128 0,192 	"/>
+	<polygon fill="#F4813C" points="0,256 64,256 128,224 	"/>
+	<polygon fill="#F7941E" points="256,256 128,224 192,256 	"/>
+	<polygon fill="#F15922" points="256,256 256,192 224,128 	"/>
+	<polygon fill="#F15922" points="256,0 224,128 256,64 	"/>
+	<polygon fill="#FFCB08" points="256,0 192,0 128,32 	"/>
+</g>
+<g id="layer3">
+	<path id="rect2887" fill="#FFFFFF" d="M62.813,38.344v175.75h20.719v-53.531h43.438c15.109,0,27.25-12.141,27.25-27.25V65.625
+		c0-15.11-12.141-27.281-27.25-27.281H62.813z M83.531,58.281h6.063h18.844h19.031c3.357,0,6.063,2.705,6.063,6.063v69.469
+		c0,3.357-2.705,6.063-6.063,6.063h-19.031H89.594h-6.063v-6.063V64.344V58.281z"/>
+</g>
+<g id="layer5">
+	<path id="path3918" fill="#FFFFFF" d="M141.094,184.781c-8.975,0-16.25,7.275-16.25,16.25s7.275,16.25,16.25,16.25
+		s16.25-7.275,16.25-16.25S150.068,184.781,141.094,184.781z M136.281,193.719l12.5,7.5l-12.5,7.125V193.719z"/>
+	<path id="path3918-1" fill="#FFFFFF" d="M176.813,184.781c-8.975,0-16.25,7.275-16.25,16.25s7.275,16.25,16.25,16.25
+		s16.25-7.275,16.25-16.25S185.787,184.781,176.813,184.781z M171.281,195.5h11.438v11.438h-11.438V195.5z"/>
+</g>
+</svg>

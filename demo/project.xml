@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="HaxePunk-Processing" package="com.gildasp.haxepunk-p5" version="1.0.0" company="Gildas P." />
+
+ 	<app file="Main" main="Main" path="bin" />
+	<window fps="60" background="0x777777" />
+	<window borderless="true" resizable="false" fullscreen="true" if="mobile" />
+	<window width="600" height="400" resizable="true" unless="mobile" />
+
+	<source path="src" />
+	<haxelib name="openfl" />
+	<haxelib name="HaxePunk" />
+
+	<icon path="assets/icon.svg" />
+</project>

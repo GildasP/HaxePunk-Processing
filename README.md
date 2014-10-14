@@ -1,10 +1,10 @@
 HaxePunk-Processing
 ===================
 
-The Processing drawing API for OpenFL-HaxePunk - Vector shapes editing was never so easy !
+The Processing drawing API for OpenFL/HaxePunk - Vector shapes editing was never so easy !
 
-This is a beta version - but it works, I already use it :)
-----------------------------------------
+Version 1.0 - You may even use it :)
+------------------------------------
 
 [Processing][1] (aka P5) has great simple tools to draw simple or complex vector shapes.
 
@@ -21,12 +21,18 @@ After that, you just use this image as usual !
 
 No more spritesheets and invasive assets, you can draw your sprites in real-time !
 
+And it's just 1 .hx file to put in your project.
+
 Easy to use
 -----------
 
 It's all static methods, so you can do fast things like this :
 
-    graphic = P5.ellipse(0, 0, 100, 75);
+    addGraphic( P5.ellipse(70, 70, 70, 60) ); // x, y, W, H
+    addGraphic( P5.rect(150, 70, 70, 60) ); // x, y, W, H
+    addGraphic( P5.triangle(200, 75, 258, 30, 286, 95) ); // x1, y1, x2, y2, ...
+    addGraphic( P5.quad(338, 31, 386, 20, 369, 63, 330, 76) ); // x1, y1, x2, y2, ...
+    addGraphic( P5.line(430, 20, 485, 75) ); // x1, y1, x2, y2
 
 or build a complex polygon like this :
 
@@ -45,14 +51,15 @@ or combine multiple shapes in one Image like this :
     P5.ellipse(L/2, H/2, L, H);
     P5.line(0, 0, L, H);
     P5.line(L, 0, 0, H);
-    graphic = GP5.getComplex(L, H); // you get a cross on a circle !
+    graphic = P5.getComplex(); // you get a cross on a circle !
+
+The only thing to consider is this : while in complexe mode, the coordinates are no more relative to the stage, but to the Image you're (virtually) drawing in.
+And the origin of these coordinates is the top-left corner of the image; sorry for that, it's because of the Flash drawing methods used to go from vector to bitmap.
 
 Todo list
 ---------
 
- - Code cleanup !
- - Remove the GImage dependency ? it's a tool I find usefull, but it's not needed to use this lib...
- - Curves with bezier stuff; it would be really usefull
- - Make it a real lib and not just 3 text files...
+ - Curves drawing (made easy in Processing)
+ - Make it a real lib and not just 3 text files... (or not ?)
 
   [1]: http://www.processing.org/reference/        
